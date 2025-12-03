@@ -1,3 +1,9 @@
+# CREATE DATABASE bank_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+# CREATE USER 'bank_user'@'localhost' IDENTIFIED BY 'password123';
+# GRANT ALL PRIVILEGES ON bank_db.* TO 'bank_user'@'localhost';
+# FLUSH PRIVILEGES;
+
+USE bank_db
 -- 用户表
 CREATE TABLE users (
    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户唯一 ID',
