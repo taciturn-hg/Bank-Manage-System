@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
@@ -13,11 +14,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,6 +48,14 @@ public class Transaction {
 
     @Column(length = 500)
     private String remark;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.createdTime == null) {
+            this.createdTime = LocalDateTime.now();
+        }
+    }
+
 
     // 可选：toString 方法（避免循环引用）
     @Override
