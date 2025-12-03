@@ -1,5 +1,6 @@
 package com.example.bankmanagesystem.exception;
 
+import com.example.bankmanagesystem.dto.common.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
