@@ -3,7 +3,7 @@
 # GRANT ALL PRIVILEGES ON bank_db.* TO 'bank_user'@'localhost';
 # FLUSH PRIVILEGES;
 
-USE bank_db
+USE bank_db;
 -- 用户表
 CREATE TABLE users (
    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '用户唯一 ID',
