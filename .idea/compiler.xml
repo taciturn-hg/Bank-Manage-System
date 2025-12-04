@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/../../maven/apache-maven-3.9.10/repo/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
-          <entry name="$PROJECT_DIR$/../../maven/apache-maven-3.9.10/repo/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
         <module name="bank-manage-system" />
       </profile>
@@ -17,7 +16,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="bank-manage-system" options="-parameters" />
+      <module name="bank-manage-system" options="-parameters --add-exports java.base/sun.net.www.protocol.http=ALL-UNNAMED" />
     </option>
   </component>
 </project>

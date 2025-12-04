@@ -14,6 +14,7 @@ public enum ErrorCode {
 
     // 业务异常
     BUSINESS_ERROR(3001, "业务异常"),
+    ACCOUNT_NOT_FOUND(3002,"账户不存在"),
 
     // 系统异常
     SYSTEM_ERROR(5000, "系统异常");
