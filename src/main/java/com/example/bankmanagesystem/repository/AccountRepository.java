@@ -1,6 +1,7 @@
 package com.example.bankmanagesystem.repository;
 
 import com.example.bankmanagesystem.entity.Account;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     // 查询所有正常状态的账户
     List<Account> findByStatus(Integer status);
+
+    Optional<Object> lockByAccountNumber(@NotBlank(message = "账户号不能为空") String accountNumber);
 }

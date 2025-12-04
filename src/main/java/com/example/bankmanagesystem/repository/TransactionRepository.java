@@ -25,4 +25,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     // 查询某个账户的某种类型交易
     List<Transaction> findByFromAccount_AccountNumberAndType(String accountNumber, String type);
+
+    boolean existsByTxId(String txId);
 }

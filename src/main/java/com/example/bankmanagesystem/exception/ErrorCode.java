@@ -15,6 +15,12 @@ public enum ErrorCode {
     // 业务异常
     BUSINESS_ERROR(3001, "业务异常"),
     ACCOUNT_NOT_FOUND(3002,"账户不存在"),
+    BALANCE_NOT_ENOUGH(3003,"账户余额不足"),
+    DEPOSIT_DUPLICATE_REQUEST(3004,"请勿重复取款"),
+    TRANSACTION_DUPLICATE_REQUEST(3005,"请勿重复转账"),
+    FROM_ACCOUNT_NOT_FOUND(3006,"转出账户不存在"),
+    TO_ACCOUNT_NOT_FOUND(3007,"转入账户不存在"),
+    COMMIT_DUPLICATE_REQUEST(3008,"交易已处理，请勿重复提交"),
 
     // 系统异常
     SYSTEM_ERROR(5000, "系统异常");

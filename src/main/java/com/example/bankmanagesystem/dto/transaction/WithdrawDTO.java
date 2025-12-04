@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WithdrawDTO {
+    private String txId;
 
     @NotBlank(message = "账户号不能为空")
     private String accountNumber;

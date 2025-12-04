@@ -26,13 +26,12 @@ public class Transaction {
     @Column(name = "tx_id", unique = true, nullable = false, length = 50)
     private String txId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "from_account", referencedColumnName = "account_number")
-    private Account fromAccount;
+    @Column(name = "from_account", length = 30)
+    private String fromAccount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "to_account", referencedColumnName = "account_number")
-    private Account toAccount;
+    @Column(name = "to_account", length = 30)
+    private String toAccount;
+
 
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;
