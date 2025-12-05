@@ -3,6 +3,7 @@ package com.example.bankmanagesystem.service.impl;
 import com.example.bankmanagesystem.dto.transaction.DepositDTO;
 import com.example.bankmanagesystem.dto.transaction.WithdrawDTO;
 import com.example.bankmanagesystem.dto.transaction.TransferDTO;
+import com.example.bankmanagesystem.dto.transaction.TransactionRecordDTO;
 import com.example.bankmanagesystem.entity.Account;
 import com.example.bankmanagesystem.entity.Transaction;
 import com.example.bankmanagesystem.exception.BusinessException;
@@ -17,6 +18,11 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -157,5 +163,40 @@ public class TransactionServiceImpl implements TransactionService {
         tx.setRemark(remark);
         tx.setCreatedTime(LocalDateTime.now());
         return transactionRepository.save(tx);
+    }
+
+    /**
+     * 为当前用户查询其所有账户的交易记录（可选按类型过滤）
+     */
+    @Override
+    public List<TransactionRecordDTO> myTransactions(Long userId, String type) {
+        // 查询该用户的所有账户号
+        List<Account> accounts = accountRepository.findByUserId(userId);
+        Set<String> accountNumbers = accounts.stream().map(Account::getAccountNumber).collect(Collectors.toSet());
+
+        // 汇总每个账户相关的交易（包含转入和转出）
+        List<Transaction> all = new ArrayList<>();
+        for (String accNo : accountNumbers) {
+            if (type == null || type.isBlank()) {
+                all.addAll(transactionRepository.findByAccountNumber(accNo));
+            } else {
+                all.addAll(transactionRepository.findByAccountNumberAndType(accNo, type));
+            }
+        }
+
+        // 按时间倒序
+        all.sort(Comparator.comparing(Transaction::getCreatedTime).reversed());
+
+        // 映射为前端展示的 DTO
+        return all.stream().map(t -> TransactionRecordDTO.builder()
+                .txId(t.getTxId())
+                .type(t.getType())
+                .fromAccount(t.getFromAccount())
+                .toAccount(t.getToAccount())
+                .amount(t.getAmount())
+                .status(t.getStatus())
+                .time(t.getCreatedTime())
+                .remark(t.getRemark())
+                .build()).toList();
     }
 }

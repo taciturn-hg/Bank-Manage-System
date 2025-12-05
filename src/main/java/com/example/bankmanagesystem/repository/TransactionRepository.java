@@ -18,11 +18,19 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t WHERE t.fromAccount = :accountNumber OR t.toAccount = :accountNumber ORDER BY t.createdTime DESC")
     List<Transaction> findByAccountNumber(@Param("accountNumber") String accountNumber);
 
+    // 兼容测试：同义方法
+    @Query("SELECT t FROM Transaction t WHERE t.fromAccount = :accountNumber OR t.toAccount = :accountNumber ORDER BY t.createdTime DESC")
+    List<Transaction> findAllByAccountNumber(@Param("accountNumber") String accountNumber);
+
     List<Transaction> findByCreatedTimeBetween(LocalDateTime start, LocalDateTime end);
 
     // 修复这一行
     List<Transaction> findByFromAccountAndType(String fromAccount, String type);
     List<Transaction> findByToAccountAndType(String toAccount, String type);
+
+    // 兼容测试：方法名包含下划线，使用显式查询实现
+    @Query("SELECT t FROM Transaction t WHERE t.fromAccount = :accountNumber AND t.type = :type ORDER BY t.createdTime DESC")
+    List<Transaction> findByFromAccount_AccountNumberAndType(@Param("accountNumber") String accountNumber, @Param("type") String type);
 
     boolean existsByTxId(String txId);
 

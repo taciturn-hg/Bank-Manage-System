@@ -10,4 +10,7 @@ public interface AccountService {
     BalanceResponseDTO getBalance(String accountNumber);
 
     AccountResponseDTO findByAccountNumber(String accountNumber);
+
+    // 新增：根据用户ID查询其账户列表
+    java.util.List<AccountResponseDTO> findByUserId(Long userId);
 }

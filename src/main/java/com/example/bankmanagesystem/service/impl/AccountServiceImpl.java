@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +72,18 @@ public class AccountServiceImpl implements AccountService {
                 account.getType(),
                 account.getBalance()
         );
+    }
+
+    @Override
+    public List<AccountResponseDTO> findByUserId(Long userId) {
+        List<Account> accounts = accountRepository.findByUserId(userId);
+        return accounts.stream()
+                .map(a -> new AccountResponseDTO(
+                        a.getId(),
+                        a.getAccountNumber(),
+                        a.getType(),
+                        a.getBalance()
+                ))
+                .collect(Collectors.toList());
     }
 }
