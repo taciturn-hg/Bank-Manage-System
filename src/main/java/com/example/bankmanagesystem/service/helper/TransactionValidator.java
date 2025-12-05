@@ -12,4 +12,10 @@ public class TransactionValidator {
             throw new IllegalArgumentException("金额必须大于 0");
         }
     }
+
+    public void validateAccount(String accountNumber) {
+        if (accountNumber == null || accountNumber.isEmpty()) {
+            throw new IllegalArgumentException("账户号不能为空");
+        }
+    }
 }

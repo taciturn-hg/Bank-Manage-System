@@ -13,18 +13,20 @@ import java.util.Optional;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    // 根据交易ID查询（用于幂等校验）
     Optional<Transaction> findByTxId(String txId);
 
-    // 查询某个账户的所有交易（转入或转出）
-    @Query("SELECT t FROM Transaction t WHERE t.fromAccount.accountNumber = :accountNumber OR t.toAccount.accountNumber = :accountNumber ORDER BY t.createdTime DESC")
-    List<Transaction> findAllByAccountNumber(@Param("accountNumber") String accountNumber);
+    @Query("SELECT t FROM Transaction t WHERE t.fromAccount = :accountNumber OR t.toAccount = :accountNumber ORDER BY t.createdTime DESC")
+    List<Transaction> findByAccountNumber(@Param("accountNumber") String accountNumber);
 
-    // 查询某个时间段内的交易
     List<Transaction> findByCreatedTimeBetween(LocalDateTime start, LocalDateTime end);
 
-    // 查询某个账户的某种类型交易
-    List<Transaction> findByFromAccount_AccountNumberAndType(String accountNumber, String type);
+    // 修复这一行
+    List<Transaction> findByFromAccountAndType(String fromAccount, String type);
+    List<Transaction> findByToAccountAndType(String toAccount, String type);
 
     boolean existsByTxId(String txId);
+
+    // 可选：同时查询转入和转出某种类型交易
+    @Query("SELECT t FROM Transaction t WHERE (t.fromAccount = :accountNumber OR t.toAccount = :accountNumber) AND t.type = :type ORDER BY t.createdTime DESC")
+    List<Transaction> findByAccountNumberAndType(@Param("accountNumber") String accountNumber, @Param("type") String type);
 }

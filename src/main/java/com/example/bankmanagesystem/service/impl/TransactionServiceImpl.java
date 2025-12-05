@@ -41,7 +41,7 @@ public class TransactionServiceImpl implements TransactionService {
         validator.validateAmount(dto.getAmount());
 
         // 悲观锁账户
-        Account account = (Account) accountRepository.lockByAccountNumber(dto.getAccountNumber())
+        Account account = accountRepository.findByAccountNumberForUpdate(dto.getAccountNumber())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         // 修改余额
@@ -49,7 +49,7 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.save(account);
 
         // 记录交易
-        Transaction tx = saveTransaction(
+        return saveTransaction(
                 dto.getTxId(),
                 null,
                 dto.getAccountNumber(),
@@ -58,8 +58,6 @@ public class TransactionServiceImpl implements TransactionService {
                 "SUCCESS",
                 "用户存款"
         );
-
-        return tx;
     }
 
     /**
@@ -69,13 +67,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public Transaction withdraw(WithdrawDTO dto) {
 
-        if (transactionRepository.existsByTxId((dto.getTxId()))) {
+        if (transactionRepository.existsByTxId(dto.getTxId())) {
             throw new BusinessException(ErrorCode.DEPOSIT_DUPLICATE_REQUEST);
         }
 
         validator.validateAmount(dto.getAmount());
 
-        Account account = (Account) accountRepository.lockByAccountNumber(dto.getAccountNumber())
+        Account account = accountRepository.findByAccountNumberForUpdate(dto.getAccountNumber())
                 .orElseThrow(() -> new BusinessException(ErrorCode.ACCOUNT_NOT_FOUND));
 
         if (account.getBalance().compareTo(dto.getAmount()) < 0) {
@@ -85,7 +83,7 @@ public class TransactionServiceImpl implements TransactionService {
         account.setBalance(account.getBalance().subtract(dto.getAmount()));
         accountRepository.save(account);
 
-        Transaction tx = saveTransaction(
+        return saveTransaction(
                 dto.getTxId(),
                 dto.getAccountNumber(),
                 null,
@@ -94,8 +92,6 @@ public class TransactionServiceImpl implements TransactionService {
                 "SUCCESS",
                 "用户取款"
         );
-
-        return tx;
     }
 
     /**
@@ -112,10 +108,10 @@ public class TransactionServiceImpl implements TransactionService {
         validator.validateAmount(dto.getAmount());
 
         // 加锁两个账户（顺序很重要，防止死锁）
-        Account from = (Account) accountRepository.lockByAccountNumber(dto.getFromAccount())
+        Account from = accountRepository.findByAccountNumberForUpdate(dto.getFromAccount())
                 .orElseThrow(() -> new BusinessException(ErrorCode.FROM_ACCOUNT_NOT_FOUND));
 
-        Account to = (Account) accountRepository.lockByAccountNumber(dto.getToAccount())
+        Account to = accountRepository.findByAccountNumberForUpdate(dto.getToAccount())
                 .orElseThrow(() -> new BusinessException(ErrorCode.TO_ACCOUNT_NOT_FOUND));
 
         if (from.getBalance().compareTo(dto.getAmount()) < 0) {
@@ -128,7 +124,7 @@ public class TransactionServiceImpl implements TransactionService {
         accountRepository.save(from);
         accountRepository.save(to);
 
-        Transaction tx = saveTransaction(
+        return saveTransaction(
                 dto.getTxId(),
                 dto.getFromAccount(),
                 dto.getToAccount(),
@@ -137,8 +133,6 @@ public class TransactionServiceImpl implements TransactionService {
                 "SUCCESS",
                 "用户转账"
         );
-
-        return tx;
     }
 
     /**

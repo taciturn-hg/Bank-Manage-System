@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity  //标记此类为JPA实体类
-
+@Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +28,8 @@ public class User {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 18)
-    private String id_card;
+    @Column(name = "id_card", nullable = false, length = 18)
+    private String idCard; // 驼峰映射到数据库 id_card
 
     @Column(nullable = false, length = 20)
     private String phone;

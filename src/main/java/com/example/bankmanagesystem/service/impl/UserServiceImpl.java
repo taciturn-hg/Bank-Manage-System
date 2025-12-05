@@ -31,7 +31,12 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setName(dto.getName());
+        user.setIdCard(dto.getIdCard());
+        user.setPhone(dto.getPhone());
+        user.setEmail(dto.getEmail());
         user.setRole("USER"); // 默认普通用户
+
 
         userRepository.save(user);
 
@@ -48,7 +53,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // 生成 JWT
-        return jwtUtil.generateToken(user.getUsername());
+        return jwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole());
     }
 
     @Override
