@@ -1,5 +1,6 @@
 package com.example.bankmanagesystem.controller;
 
+import com.example.bankmanagesystem.dto.user.LoginResponseDTO;
 import com.example.bankmanagesystem.dto.user.UserLoginDTO;
 import com.example.bankmanagesystem.dto.user.UserRegisterDTO;
 import com.example.bankmanagesystem.dto.user.UserResponseDTO;
@@ -24,8 +25,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginDTO dto) {
-        return userService.login(dto);
+    public LoginResponseDTO login(@RequestBody UserLoginDTO dto) {
+        String token = userService.login(dto);
+        return new LoginResponseDTO(token);
     }
 
     @GetMapping("/{id}")
